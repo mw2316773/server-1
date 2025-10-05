@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/petite-vue" defer init></script>
+  </head>
+
+  <body v-scope="dataset()">
+    <p>
+      <button>データ取得</button>
+    </p>
+  <body>
+
+  <script>
+    function dataset() { 
+      return { 
+        data: '',
+        async fetchData(){
+        const res = await fetch('/data.json');
+        this.data = res.json();
+        console.log(this.data);
+        }
+      };
+    }
+  </script>
+</html>

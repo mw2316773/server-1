@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>server-2</title>
+    <script src="https://unpkg.com/petite-vue" defer init></script>
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+      table {
+        margin-top: 1em;
+      }
+      table,
+      td,
+      th {
+        border: solid 1px darkgreen;
+        border-collapse: collapse;
+      }
+      th {
+        background-color: darkgreen;
+        color: white;
+        border-color: white;
+        padding: 0 5px;
+      }
+    </style>
+  </head>
+
+  <body v-cloak v-scope="dataset()">
+    <h1>NHK番組表</h1>
+
+    <button @click="getProgramList">番組表取得</button>
+
+    <!-- データが取得できたときにdl要素を表示する -->
+    <label
+      >地域：
+      <select v-model="area">
+        <option value="130">東京</option>
+        <option value="270">大阪</option>
+      </select>
+    </label>
+
+    <label
+      >チャンネル：
+      <select v-model="service">
+        <option value="g1">NHK 総合1</option>
+        <option value="s1">NHK BS1</option>
+        <option value="r3">NHK FM</option>
+      </select>
+    </label>
+
+    <table>
+      <tr>
+        <th>時刻</th>
+        <th>タイトル</th>
+        <th>内容</th>
+      </tr>
+      <tr v-for="item in list" :key="item.id">
+        <td>{{ new Date(item.start_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}</td>
+        <td>{{item.title}}</td>
+        <td>{{item.content}}</td>
+      </tr>
+    </table>
+  </body>
+
+  <script>
+    function dataset() {
+      const apikey = localStorage.getItem('API_KEY');
+
+      const query = new URLSearchParams({
+        apikey: apikey, // コードにAPIキーは直接書き込まない
+        id: 'ojk'
+      });
+
+      const url = 'https://httpbin.org/get?' + query;
+
+      return {
+        // 変数（プロパティ）
+        list: false,
+        apikey: localStorage.getItem('API_KEY'), // 自分で取得する
+        area: "130", // 初期値: 東京
+        service: "g1", // 初期値: NHK総合1
+
+        async getProgramList() {
+          const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          const url = `https://api.nhk.or.jp/v2/pg/list/${this.area}/${this.service}/${today}.json?key=${this.apikey}`;
+
+          
+          const res = await fetch(url);
+          const data = await res.json();
+          this.list = data.list[this.service] || [];
+        }
+      };
+    }
+  </script>
+</html>

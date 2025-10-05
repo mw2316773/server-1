@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>petite-vue入門</title>
+  <script src="https://unpkg.com/petite-vue" defer init></script>
+</head>
+
+<body v-scope="dataset()">
+  <table border="1"></table>
+  <form @click="prevent=">
+    <label>name<input v-model="name"></label></br>
+    <label for="type" v-model="type">type: </label>
+    <select>
+      <option>ほのお</option>
+      <option>みず</option>
+      <option>でんき</option>
+      <option>あく</option>
+      <option>エスパー</option>
+    </select>
+    <br />
+    <label>weight: <input v-model="w" /></label><br />
+    <label>ablity: <input v-model="a" /></label><br />
+    <button @click="">登録</button>
+  </form>
+
+  <table>
+    <tr>
+    <th>名前</th><th>タイプ</th><th>重さ</th><th>特性</th>
+  </tr>
+  <tr v-for="pkmn of list">
+    <td v-text="pkmn.name"></td>
+    <td v-text="pkmn.type"></td>
+    <td style="text-align: right" v-text="pkmn.weight+'kg'"></td>
+    <td v-text="pkmn.ability"></td>
+  </tr>
+  </table>
+  
+</body>
+<script>
+  function dataset(){
+    return {
+      name:'',
+      type: 'ほのお',
+      w: '',
+      a: '',
+      list: [
+        { name: 'ガーディ', type: 'ほのお', weight: 19.0, ability: 'もらいび' },
+        { name: 'コイキング', type: 'みず', weight: 10.0, ability: 'すいすい' },
+        { name: 'コダック', type: 'みず', weight: 19.6, ability: 'しめつけ' },
+        { name: 'サンダース', type: 'でんき', weight: 24.5, ability: 'ちくでん' },
+        { name: 'ピカチュウ', type: 'でんき', weight: 6.0, ability: 'せいでんき' },
+        { name: 'ヒトカゲ', type: 'ほのお', weight: 8.5, ability: 'もうか' },
+        { name: 'ブースター', type: 'ほのお', weight: 25.0, ability: 'もらいび' },
+        { name: 'ミュウ', type: 'エスパー', weight: 4.0, ability: 'シンクロ' }
+      ]
+    };
+    function add(){
+
+    }
+  }
+</script>
+
+<style>
+  table, td, th {
+    border: solid 1px;
+    border-collapse: collapse;
+    padding: 0.5ex 1ex;
+  }
+</style>
+</html>
