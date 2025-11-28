@@ -1,45 +1,72 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fetch API</title>
-    <style>
-      table,
-      th,
-      td {
-        border: solid black 1px;
-        border-collapse: collapse;
-        padding: 5px 10px;
-      }
-    </style>
-    <script src="https://unpkg.com/petite-vue" defer init></script>
-  </head>
-
-  <body v-scope="dataset()">
-    <p>
-      <button @click="fetchData">データ取得</button>
-    </p>
-    <table v-if="data">
-      <tr>
-        <th v-for="category of ['名前', 'タイプ', '重さ', '特性','画像']">{{category}}</th>
-      </tr>
-      <tr v-for="item of data">
-        <td v-for="d of item">{{d}}</td>
-      </tr> 
-    </table>
-  </body>
-  <script>
-    function dataset() {
-      return {
-        data: false,
-        async fetchData() {
-          const res = await fetch('/data.json');
-          const obj = await res.json();
-          this.data = obj.list;
-          console.log(JSON.stringify(data, null, 2));
-        }
-      };
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch API</title>
+  <style>
+    table, th, td {
+      border: solid black 1px;
+      border-collapse: collapse;
+      padding: 5px 10px;
     }
-  </script>
+  </style>
+</head>
+
+<body>
+  <p>
+    <button>データ取得</button>
+  </p>
+</body>
+
+<script>
+  // button要素にfetchData関数を登録
+  document.querySelector('button').addEventListener('click', fetchData);
+
+  // リソースをfetch関数で取得する関数（関数名は何でもOK）
+  async function fetchData() {
+    // await を使う場合、async を付ける
+
+    // リソースをJSON形式で取得
+    const res = await fetch('/server-1/resource/data.json');
+      // await は指定した関数の Promise の結果が返されるまで、async function 内の処理を一時停止する。
+      //  サードパーティWebAPI
+
+    // Responseオブジェクトからオブジェクトを抽出
+    const obj = await res.json();
+
+    // objからlistのみ抽出
+    const data = obj.list; 
+
+    // データをコンソールに表示
+    console.log(JSON.stringify(data, null, 2));
+      // console.log(JSON.stringify(オブジェクト, null, 2));
+
+      // 取得したデータを表形式で表示する処理
+      // table要素
+      const table = document.createElement('table');
+      document.body.appendChild(table);
+
+      // ヘッダー（th要素）
+      const record = document.createElement('tr');
+      table.appendChild(record);
+      for (const category of ['名前', 'タイプ', '重さ', '特性']) {
+        const header = document.createElement('th');
+        header.textContent = category;
+        record.appendChild(header);
+      }
+
+      // コンテンツ（td要素）
+      for (const item of data) {
+        const record = document.createElement('tr');
+        table.appendChild(record);
+        for (const d in item) {
+          const cell = document.createElement('td');
+          cell.textContent = item[d];
+          record.appendChild(cell);
+        }
+      }
+  }
+
+</script>
 </html>
